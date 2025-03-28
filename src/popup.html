@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reddit Filter</title>
+</head>
+<body class="bg-reddit-dark text-gray-200 w-80 h-auto p-4 font-sans">
+  <div class="flex flex-col gap-5">
+    <div class="flex items-center justify-center gap-2">
+      <h1 class="text-xl font-semibold text-white flex items-center gap-2">
+        <img src="icons/icon128.png" alt="Reddit Logo" class="w-6 h-6">
+        Reddit Filter
+      </h1>
+    </div>
+    
+    <div class="bg-reddit-card rounded-md shadow-lg p-4 border border-reddit-border">
+      <h2 class="text-md font-semibold mb-2 text-white">Keywords Filter</h2>
+      <p class="text-sm text-gray-400 mb-3">
+        Posts containing these keywords in the title or subreddit name will be hidden.
+      </p>
+      
+      <div class="flex gap-2 mb-3">
+        <input type="text" id="keyword-input" placeholder="Add keywords (comma-separated)" 
+          class="flex-grow px-3 py-2 bg-reddit-input border border-reddit-border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-reddit-bluePrimary placeholder-gray-500">
+        <button id="add-keyword" 
+          class="bg-reddit-bluePrimary hover:opacity-80 text-white px-3 py-2 rounded-md text-sm font-medium transition-colors">
+          Add
+        </button>
+      </div>
+      
+      <div id="keywords-list" class="flex flex-wrap gap-2 mt-3">
+        <!-- Keywords will be added here dynamically -->
+      </div>
+    </div>
+    
+    <div class="bg-reddit-card rounded-md shadow-lg p-4 border border-reddit-border">
+      <div class="flex items-center justify-between mb-1">
+        <h2 class="text-md font-semibold text-white">Hide Popular Content Near You</h2>
+        <label class="relative inline-flex items-center cursor-pointer">
+          <input type="checkbox" id="geo-popular-toggle" class="sr-only peer">
+          <div class="w-11 h-6 bg-reddit-tag peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-gray-300 after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-reddit-blue"></div>
+        </label>
+      </div>
+      <p class="text-sm text-gray-400">
+        Hides "Popular content near you" recommendations.
+      </p>
+    </div>
+    
+    <div class="flex justify-between gap-3">
+      <button id="save-btn" class="flex-1 bg-reddit-bluePrimary hover:opacity-80 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors">
+        Save
+      </button>
+      <button id="clear-btn" class="flex-1 bg-reddit-tag hover:bg-gray-600 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors">
+        Clear All
+      </button>
+    </div>
+  </div>
+</body>
+</html> 
