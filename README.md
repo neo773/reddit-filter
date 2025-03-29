@@ -14,7 +14,6 @@ A Chrome extension that filters Reddit posts based on keywords in post titles or
 ### Prerequisites
 
 - [Bun.js](https://bun.sh/)
-- Node.js and npm (comes with Bun)
 
 ### Setup
 
@@ -45,10 +44,3 @@ A Chrome extension that filters Reddit posts based on keywords in post titles or
 2. Add keywords you want to filter
 3. Click "Save" to apply the filters
 4. Browse Reddit and posts containing those keywords will be hidden automatically
-
-## Technologies Used
-
-- TypeScript
-- Tailwind CSS
-- Webpack
-- Chrome Extension API (Manifest V3) 
