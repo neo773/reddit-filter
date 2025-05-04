@@ -8,20 +8,24 @@ document.addEventListener('DOMContentLoaded', async () => {
   const saveButton = document.getElementById('save-btn') as HTMLButtonElement;
   const clearButton = document.getElementById('clear-btn') as HTMLButtonElement;
   const geoPopularToggle = document.getElementById('geo-popular-toggle') as HTMLInputElement;
+  const adsToggle = document.getElementById('ads-toggle') as HTMLInputElement;
   
   // Current filter settings in memory
   let keywords: string[] = [];
   let hideGeoPopular: boolean = false;
+  let hideAds: boolean = false;
   
   // Load saved settings
   const loadSettings = async (): Promise<void> => {
     const data = await chrome.storage.sync.get('redditFilter') as { redditFilter?: FilterStorage };
     keywords = data.redditFilter?.keywords || [];
     hideGeoPopular = data.redditFilter?.hideGeoPopular || false;
+    hideAds = data.redditFilter?.hideAds || false;
     
     // Update UI
     renderKeywords();
     geoPopularToggle.checked = hideGeoPopular;
+    adsToggle.checked = hideAds;
   };
   
   // Render keywords to the UI
@@ -71,7 +75,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     await chrome.storage.sync.set({
       redditFilter: { 
         keywords,
-        hideGeoPopular 
+        hideGeoPopular,
+        hideAds
       }
     });
     
@@ -98,6 +103,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     hideGeoPopular = geoPopularToggle.checked;
   };
   
+  // Update ads setting
+  const updateAdsSetting = (): void => {
+    hideAds = adsToggle.checked;
+  };
+  
   // Event listeners
   addKeywordButton.addEventListener('click', addKeyword);
   keywordInput.addEventListener('keypress', (e) => {
@@ -106,6 +116,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   saveButton.addEventListener('click', saveSettings);
   clearButton.addEventListener('click', clearKeywords);
   geoPopularToggle.addEventListener('change', updateGeoPopularSetting);
+  adsToggle.addEventListener('change', updateAdsSetting);
   
   // Initial load
   await loadSettings();

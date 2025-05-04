@@ -1,6 +1,6 @@
 {
   "name": "reddit-filter",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Chrome extension to filter Reddit posts based on keywords",
   "scripts": {
     "build": "webpack --config webpack.config.js",

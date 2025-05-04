@@ -27,6 +27,16 @@ const shouldHidePost = (post: RedditPost, settings: FilterStorage): boolean => {
   );
 };
 
+// Function to hide ads if enabled
+const hideAds = (settings: FilterStorage): void => {
+  if (settings.hideAds) {
+    const ads = document.querySelectorAll('shreddit-ad-post');
+    ads.forEach(ad => {
+      (ad as HTMLElement).style.display = 'none';
+    });
+  }
+};
+
 // Function to process posts and hide them if needed
 const processRedditPosts = (settings: FilterStorage): void => {
   const posts = document.querySelectorAll('shreddit-post') as NodeListOf<RedditPost>;
@@ -39,6 +49,9 @@ const processRedditPosts = (settings: FilterStorage): void => {
       post.style.display = '';
     }
   });
+  
+  // Also process ads
+  hideAds(settings);
 };
 
 // Main function to load settings and setup observers
@@ -47,7 +60,8 @@ const initRedditFilter = async (): Promise<void> => {
   const data = await chrome.storage.sync.get('redditFilter') as { redditFilter?: FilterStorage };
   const settings: FilterStorage = {
     keywords: data.redditFilter?.keywords || [],
-    hideGeoPopular: data.redditFilter?.hideGeoPopular || false
+    hideGeoPopular: data.redditFilter?.hideGeoPopular || false,
+    hideAds: data.redditFilter?.hideAds || false
   };
   
   // Process existing posts
@@ -62,7 +76,10 @@ const initRedditFilter = async (): Promise<void> => {
         for (let i = 0; i < mutation.addedNodes.length; i++) {
           const node = mutation.addedNodes[i];
           if (node instanceof HTMLElement && 
-              (node.tagName === 'SHREDDIT-POST' || node.querySelector('shreddit-post'))) {
+              (node.tagName === 'SHREDDIT-POST' || 
+               node.tagName === 'SHREDDIT-AD-POST' || 
+               node.querySelector('shreddit-post') || 
+               node.querySelector('shreddit-ad-post'))) {
             shouldProcess = true;
             break;
           }
@@ -86,9 +103,10 @@ const initRedditFilter = async (): Promise<void> => {
   // Listen for storage changes to update filters in real-time
   chrome.storage.onChanged.addListener((changes) => {
     if (changes.redditFilter) {
-      const newSettings = changes.redditFilter.newValue || { keywords: [], hideGeoPopular: false };
+      const newSettings = changes.redditFilter.newValue || { keywords: [], hideGeoPopular: false, hideAds: false };
       settings.keywords = newSettings.keywords || [];
       settings.hideGeoPopular = newSettings.hideGeoPopular || false;
+      settings.hideAds = newSettings.hideAds || false;
       processRedditPosts(settings);
     }
   });
