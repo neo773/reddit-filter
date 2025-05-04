@@ -102,8 +102,8 @@ const initRedditFilter = async (): Promise<void> => {
   
   // Listen for storage changes to update filters in real-time
   chrome.storage.onChanged.addListener((changes) => {
-    if (changes.redditFilter) {
-      const newSettings = changes.redditFilter.newValue || { keywords: [], hideGeoPopular: false, hideAds: false };
+    if (changes.redditFilter && changes.redditFilter.newValue) {
+      const newSettings = changes.redditFilter.newValue as FilterStorage;
       settings.keywords = newSettings.keywords || [];
       settings.hideGeoPopular = newSettings.hideGeoPopular || false;
       settings.hideAds = newSettings.hideAds || false;
