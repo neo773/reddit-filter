@@ -2,10 +2,14 @@
 
 A Chrome extension that filters Reddit posts based on keywords in post titles or subreddit names.
 
+
+![image](https://github.com/user-attachments/assets/83e7abb9-336d-4ed9-aa01-fdb4c2425054)
+
 ## Features
 
 - Filter Reddit posts containing specific keywords
 - Easily add and remove keywords from the filter list
+- Block ads
 - Real-time filtering as you browse Reddit
 - Clean UI with Tailwind CSS
 
