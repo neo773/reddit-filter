@@ -18,13 +18,56 @@ const shouldHidePost = (post: RedditPost, settings: FilterStorage): boolean => {
     return true;
   }
   
-  // Check if post should be hidden due to keywords - convert all to lowercase for comparison
+  // Check if post should be hidden due to keywords - use word boundary matching
   const postTitleLower = postTitle.toLowerCase();
   const subredditNameLower = subredditName.toLowerCase();
   
-  return settings.keywords.some(keyword => 
-    postTitleLower.includes(keyword) || subredditNameLower.includes(keyword)
+  // Helper function to check if a keyword matches as a whole word
+  const keywordMatches = (text: string, keyword: string): boolean => {
+    // Escape special regex characters in the keyword
+    const escapedKeyword = keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    // Create regex with word boundaries to match whole words only
+    const regex = new RegExp(`\\b${escapedKeyword}\\b`, 'i');
+    return regex.test(text);
+  };
+
+  // Helper function to split camelCase/PascalCase subreddit names into words
+  const splitSubredditName = (subreddit: string): string[] => {
+    // Remove r/ prefix if it exists
+    const cleanSubreddit = subreddit.replace(/^r\//, '');
+    
+    // Split by capital letters to get individual words
+    // This regex finds positions before capital letters (except at the start)
+    const words = cleanSubreddit.split(/(?=[A-Z])/).filter(word => word.length > 0);
+    
+    return words.map(word => word.toLowerCase());
+  };
+
+  // Check title against keywords
+  const titleMatches = settings.keywords.some(keyword => 
+    keywordMatches(postTitleLower, keyword)
   );
+
+  // Check subreddit name - split into words first, then check each word
+  const subredditWords = splitSubredditName(subredditName);
+  const subredditMatches = settings.keywords.some(keyword => 
+    subredditWords.some(word => keywordMatches(word, keyword)) ||
+    keywordMatches(subredditNameLower, keyword) // Also check the full name for backwards compatibility
+  );
+
+  const shouldHide = titleMatches || subredditMatches;
+
+  if (shouldHide) {
+    const matchedKeywords = settings.keywords.filter(keyword => 
+      keywordMatches(postTitleLower, keyword) || 
+      subredditWords.some(word => keywordMatches(word, keyword)) ||
+      keywordMatches(subredditNameLower, keyword)
+    );
+    console.log('Hiding post because of matching keywords:', matchedKeywords);
+    console.log('Subreddit words:', subredditWords);
+  }
+
+  return shouldHide;
 };
 
 // Function to hide ads if enabled
