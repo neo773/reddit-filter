@@ -14,10 +14,13 @@ const shouldHidePost = (post: RedditPost, settings: FilterStorage): boolean => {
   const recommendationSource = post.getAttribute('recommendation-source') || '';
   
   // Check if post should be hidden due to geo popular content setting
-  if (settings.hideGeoPopular && recommendationSource === 'GeoPopularRecommendationContext') {
+  if (
+    settings.hideGeoPopular &&
+    (recommendationSource === 'GeoPopularRecommendationContext' ||
+     recommendationSource === 'geo_explore_subreddits')
+  ) {
     return true;
   }
-  
   // Check if post should be hidden due to keywords - use word boundary matching
   const postTitleLower = postTitle.toLowerCase();
   const subredditNameLower = subredditName.toLowerCase();
